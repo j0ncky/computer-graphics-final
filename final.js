@@ -1,7 +1,20 @@
 "use strict";
 
+
+
+ 
 async function main() {
   // Get A WebGL context
+  const fpsElem = document.querySelector("#fps");
+  const avgElem = document.querySelector("#avg");
+
+  const frameTimes = [];
+  let   frameCursor = 0;
+  let   numFrames = 0;   
+  const maxFrames = 20;
+  let   totalFPS = 0;
+
+  let then = 0;
   /** @type {HTMLCanvasElement} */
   const canvas = document.querySelector("#canvas");
   const gl = canvas.getContext("webgl");
@@ -287,6 +300,8 @@ async function main() {
   }
 
   function render(time) {
+   
+
     time *= 0.001;  // convert to seconds
 
     webglUtils.resizeCanvasToDisplaySize(gl.canvas);
@@ -333,7 +348,29 @@ async function main() {
       // walk the scene and render all renderables
       scene.root.traverse(renderDrawables);
     }
+    
+  const deltaTime = time - then;          // compute time since last frame
+  then = time;                            // remember time for next frame
+  const fps = 1 / deltaTime;             // compute frames per second
+  
+  fpsElem.textContent = fps.toFixed(1);  // update fps display
+  
+  // add the current fps and remove the oldest fps
+  totalFPS += fps - (frameTimes[frameCursor] || 0);
+  
+  // record the newest fps
+  frameTimes[frameCursor++] = fps;
+  
+  // needed so the first N frames, before we have maxFrames, is correct.
+  numFrames = Math.max(numFrames, frameCursor);
+  
+  // wrap the cursor
+  frameCursor %= maxFrames;
+    
+  const averageFPS = totalFPS / numFrames;
 
+  avgElem.textContent = averageFPS.toFixed(1);  // update avg display
+  
     requestAnimationFrame(render);
   }
   requestAnimationFrame(render);

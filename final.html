@@ -1,0 +1,40 @@
+<canvas id="canvas"></canvas>
+<link rel="stylesheet" href="final.css" />
+<script  id="fs" type="notjs">
+precision highp float;
+
+varying vec3 v_normal;
+
+uniform vec4 u_diffuse;
+uniform vec3 u_lightDirection;
+
+void main () {
+  vec3 normal = normalize(v_normal);
+  float light = dot(u_lightDirection, normal) * .5 + .5;
+  gl_FragColor = vec4(u_diffuse.rgb * light, u_diffuse.a);
+}
+</script>
+<script  id="meshVS" type="notjs">
+attribute vec4 a_POSITION;
+attribute vec3 a_NORMAL;
+
+uniform mat4 u_projection;
+uniform mat4 u_view;
+uniform mat4 u_world;
+
+varying vec3 v_normal;
+
+void main() {
+  gl_Position = u_projection * u_view * u_world * a_POSITION;
+  v_normal = mat3(u_world) * a_NORMAL;
+}
+</script><!--
+for most samples webgl-utils only provides shader compiling/linking and
+canvas resizing because why clutter the examples with code that's the same in every sample.
+See https://webglfundamentals.org/webgl/lessons/webgl-boilerplate.html
+and https://webglfundamentals.org/webgl/lessons/webgl-resizing-the-canvas.html
+for webgl-utils, m3, m4, and webgl-lessons-ui.
+-->
+<script src="https://webglfundamentals.org/webgl/resources/webgl-utils.js"></script>
+<script src="https://webglfundamentals.org/webgl/resources/m4.js"></script>
+<script src="final.js"></script>

@@ -4,6 +4,7 @@ A lot of the code for this project was made following a tutorial found at https:
 Our own coding work came from adding in an fps counter, as well as loading in our own models and adjusting things as needed.
 Included below is also a failed attempt at loading multiple models to stress test the program.
 
+```
 class MeshRenderer {
     constructor(mesh) {
       this.mesh = mesh;
@@ -28,3 +29,4 @@ class MeshRenderer {
       }
     }
   }
+```
